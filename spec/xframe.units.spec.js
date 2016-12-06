@@ -493,6 +493,37 @@ function executeTests() {
 					} );
 					expect( typeof result === "undefined" ).to.be( true );
 				} );
+				it( "should route a message with allowed origins set to a empty list", function() {
+					postal.fedx.transports.xframe.configure( {
+						allowedOrigins: [ "http://fake.origin" ],
+						enabled: false
+					} );
+					postal.fedx.transports.xframe.routeMessage( fakeEvent );
+					expect( result ).to.eql( {
+						type: "federation.message",
+						timeStamp: "2013-01-12T16:15:23.853Z",
+						envelope: {
+							channel: "federate",
+							topic: "all.the.things",
+							data: "Booyah!"
+						}
+					} );
+				} );
+				it( "should route a message with allowed origins diabled", function() {
+					postal.fedx.transports.xframe.configure( {
+						allowedOrigins: []
+					} );
+					postal.fedx.transports.xframe.routeMessage( fakeEvent );
+					expect( result ).to.eql( {
+						type: "federation.message",
+						timeStamp: "2013-01-12T16:15:23.853Z",
+						envelope: {
+							channel: "federate",
+							topic: "all.the.things",
+							data: "Booyah!"
+						}
+					} );
+				} );
 			} );
 			describe( "sending a disconnect message", function() {
 				it( "should remove the remote from the remotes array", function() {
